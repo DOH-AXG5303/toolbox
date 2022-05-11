@@ -10,6 +10,8 @@ dependencies:
   - pandas=1.4*
   - openpyxl=3.0*
   - hvplot=0.7*
+  - pyodbc=4.0*
+  - requests=2.25*
   - matplotlib=3.3*
   - pip:
       - PyCap == 2.*
