@@ -1,7 +1,7 @@
 import string
 import random
 import hashlib
-
+import numpy as np
 
 
 
@@ -37,4 +37,21 @@ def uuid_gen(text, salt = "HMAC_key"):
     hexa = hash_key.hexdigest()
     
     return hexa
+    
+    
+def rename_columns(df, dic):
+    """
+    Rename dataframe columns to key if found in list of values in provided dictionary {"new_clm_name":["name1", "name2", "name3", etc.]}
+    Args:
+        df: dataframe to be modified
+        dict: dictionary to map 
+    """
+    for key, value in dic.items():
+        mask = df.columns.isin(value)
+        cols_array = np.array(df.columns)
+        cols_array[mask] = key 
+        
+        df.columns = cols_array
+        
+    return df
     
