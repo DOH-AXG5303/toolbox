@@ -61,3 +61,20 @@ def describe_fields(project):
     complete["Choice Values"] = df_joined["Choice Values_l"].fillna(df_joined["Choice Values_r"])
     
     return complete
+
+def redcap_API_export(url,token):
+    """
+    all data API request
+    """
+
+    fields = {
+        'token': token,
+        'content': 'record',
+        'format': 'csv',
+        'type': 'flat'}
+
+    r = requests.post(url, data=fields)
+    
+    df = pd.read_csv(io.StringIO(r.content.decode("utf-8")), index_col=0)
+
+    return df
