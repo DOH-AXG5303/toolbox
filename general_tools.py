@@ -2,6 +2,8 @@ import string
 import random
 import hashlib
 import numpy as np
+import pandas as pd
+
 
 
 
@@ -53,7 +55,6 @@ def rename_columns(df, dic):
         
     return df
     
-    
 def compare_similar_dataframes(df1,df2):
     """
     Provides analysis of two dataframes that are expected to be identical.
@@ -61,6 +62,9 @@ def compare_similar_dataframes(df1,df2):
         df1 - Dataframe object
         df2 - Dataframe object    
     """
+    df1 = df1.copy()
+    df2 = df2.copy()
+    
     #sort columns in both dataframes
     df1.columns = df1.columns.sort_values()
     df2.columns = df2.columns.sort_values()
@@ -84,14 +88,16 @@ def compare_similar_dataframes(df1,df2):
             #FOR FUTURE SELF: CREATE STATEMENT TO TEST SERIES EQUALITY
             for i in df1.columns:
                 try:
-                    pd.testing.assert_series_equal(df1[i], df2[i], check_dtype=False)
+                    pd.testing.assert_series_equal(df1[i], df2[i])
                 except:
                     print(f"NOT IDENTICAL: {i}")
-                    print()
-                    
                     not_identical.append(i)
                     
-            return not_identical
+            if len(not_identical) == 0:
+                print("The two dataframes are an exact match, congrats!")
+            
+            else:    
+                return not_identical
         
         else:
             print(f"The columns of Dataframe1 and Dataframe2 are named different")
@@ -116,3 +122,5 @@ def compare_similar_dataframes(df1,df2):
     
     else:
         print("something is really off about your dataframes, possibly different MultiIndex")
+
+        
