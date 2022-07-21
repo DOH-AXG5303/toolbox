@@ -20,8 +20,6 @@ def padding_gen():
     return "".join([random.choice(chars) for i in range(length)])
 
 
-
-
 def uuid_gen(text, salt = "HMAC_key"):
     """
     Generate a hash (uuid) from phone number string and HMAC key (unique passphrase)
@@ -55,3 +53,66 @@ def rename_columns(df, dic):
         
     return df
     
+    
+def compare_similar_dataframes(df1,df2):
+    """
+    Provides analysis of two dataframes that are expected to be identical.
+    Args:
+        df1 - Dataframe object
+        df2 - Dataframe object    
+    """
+    #sort columns in both dataframes
+    df1.columns = df1.columns.sort_values()
+    df2.columns = df2.columns.sort_values()
+    
+    #common columns for multiple comparisons
+    in_common = set(df1.columns) & set(df2.columns)
+    
+    #to add missmatched elements
+    not_identical = []
+    
+    # Compare shape
+    if df1.shape == df2.shape:
+        print(f"The shapes of Dataframe1 and Dataframe2 are identical: {df1.shape}")
+        print()
+        
+        if set(df1.columns) == set(df2.columns):
+            print(f"The columns of Dataframe1 and Dataframe2 are identical, congrats!")
+            print()
+            
+            #compare each set of series
+            #FOR FUTURE SELF: CREATE STATEMENT TO TEST SERIES EQUALITY
+            for i in df1.columns:
+                try:
+                    pd.testing.assert_series_equal(df1[i], df2[i], check_dtype=False)
+                except:
+                    print(f"NOT IDENTICAL: {i}")
+                    print()
+                    
+                    not_identical.append(i)
+                    
+            return not_identical
+        
+        else:
+            print(f"The columns of Dataframe1 and Dataframe2 are named different")
+            print()
+            print(f"The following columns are unique to Dataframe1: {set(df1.columns) - in_common}")
+            print()
+            print(f"The following columns are unique to Dataframe2: {set(df2.columns) - in_common}")
+            print()
+
+    elif df1.shape[1] != df2.shape[1]:
+        print(f"The columns are not the same size. Dataframe1: {df1.shape[1]}, Dataframe2: {df2.shape[1]}")
+        print()
+        
+        print(f"The following columns are unique to Dataframe1: {set(df1.columns) - in_common}")
+        print()
+        print(f"The following columns are unique to Dataframe2: {set(df2.columns) - in_common}")
+        print()
+    
+    elif df1.shape[0] != df2.shape[0]:
+        print(f"The rows are not the same size. Dataframe1: {df1.shape[0]}, Dataframe2: {df2.shape[0]}")
+        print()
+    
+    else:
+        print("something is really off about your dataframes, possibly different MultiIndex")
