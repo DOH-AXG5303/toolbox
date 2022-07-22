@@ -65,10 +65,6 @@ def compare_similar_dataframes(df1,df2):
     df1 = df1.copy()
     df2 = df2.copy()
     
-    #sort columns in both dataframes
-    df1.columns = df1.columns.sort_values()
-    df2.columns = df2.columns.sort_values()
-    
     #common columns for multiple comparisons
     in_common = set(df1.columns) & set(df2.columns)
     
